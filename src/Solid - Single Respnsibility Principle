@@ -1,0 +1,98 @@
+The Single Responsibility principle (SRP) states that:
+
+There should never be more than one reason for a class to change.
+We can relate the “reason to change” to “the responsibility of the class”. So each responsibility would be an axis for
+change. This principle is similar to designing classes which are highly cohesive. So the idea is to design a class
+which has one responsibility or in otherwords caters to implementing a functionality . I would like to clarify here
+that one responsibility doesn't mean that the class has only ONE method. A responsibility can be implemented by means
+of different methods in the class.
+
+Why is that this principle is required?
+
+Imagine designing classes with more than one responsibility/implementing more than one functionality. There’s no one
+stopping you to do this. But imagine the amount of dependency your class can create within itself in the due course
+of the development time. So when you are asked to change a certain functionality, you are not really sure how it would
+impact the other functionalities implemented in the class. The change might or might not impact other features, but you
+ really can’t take risk, especially in production applications. So you end up testing all the dependent features.
+
+You might say, we have automated tests, and the number of tests to be checked are low, but imagine the impact over time.
+These kind of changes get accumulate owing to the viscosity of the code making it really fragile and rigid.
+
+One way to correct the violation of SRP is to decompose the class functionalities into different classes, each of which
+confirms to SRP.
+
+An example to clarify this principle:
+
+Suppose you are asked to implement a UserSetting service where in the user can change the settings but before that the
+user has to be authenticated. One way to implement this would be:
+
+
+public class UserSettingService
+{
+  public void changeEmail(User user)
+  {
+    if(checkAccess(user))
+    {
+       //Grant option to change
+    }
+  }
+  public boolean checkAccess(User user)
+  {
+    //Verify if the user is valid.
+  }
+}
+
+All looks good, until you would want to reuse the checkAccess code at some other place OR you want to make changes
+to the way checkAccess is being done OR you want to make change to the way email changes are being approved. In all
+the later 2 cases you would end up changing the same class and in the first case you would have to use
+UserSettingService to check for access as well, which is unnecessary.
+
+One way to correct this is to decompose the UserSettingService into UserSettingService and SecurityService. And move
+the checkAccess code into SecurityService.
+
+public class UserSettingService
+{
+  public void changeEmail(User user)
+  {
+    if(SecurityService.checkAccess(user))
+    {
+       //Grant option to change
+    }
+  }
+}
+
+public class SecurityService
+{
+  public static boolean checkAccess(User user)
+  {
+    //check the access.
+  }
+}
+
+Another example would be:
+
+Suppose there is a requirement to download the file – may be in csv/json/xml format, parse the file and then update
+the contents into a database or file system. One approach would be to:
+
+public class Task
+{
+  public void downloadFile(location)
+  {
+    //Download the file
+  }
+  public void parseTheFile(file)
+  {
+    //Parse the contents of the file- XML/JSON/CSV
+  }
+  public void persistTheData(data)
+  {
+    //Persist the data to Database or file system.
+  }
+}
+
+Looks good, all in one place easy to understand. But what about the number of times this class has to be updated?
+What about the reusability of parser code? or download code? Its not good design in terms of reusability of different
+parts of the code, in terms of cohesiveness.
+
+One way to decompose the Task class is to create different classes for downloading the file – Downloader, for parsing
+the file – Parser and for persisting to the database or file system.
