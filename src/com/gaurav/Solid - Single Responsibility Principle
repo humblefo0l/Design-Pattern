@@ -27,17 +27,13 @@ Suppose you are asked to implement a UserSetting service where in the user can c
 user has to be authenticated. One way to implement this would be:
 
 
-public class UserSettingService
-{
-  public void changeEmail(User user)
-  {
-    if(checkAccess(user))
-    {
+public class UserSettingService{
+  public void changeEmail(User user){
+    if(checkAccess(user)){
        //Grant option to change
     }
   }
-  public boolean checkAccess(User user)
-  {
+  public boolean checkAccess(User user){
     //Verify if the user is valid.
   }
 }
@@ -50,21 +46,16 @@ UserSettingService to check for access as well, which is unnecessary.
 One way to correct this is to decompose the UserSettingService into UserSettingService and SecurityService. And move
 the checkAccess code into SecurityService.
 
-public class UserSettingService
-{
-  public void changeEmail(User user)
-  {
-    if(SecurityService.checkAccess(user))
-    {
+public class UserSettingService{
+  public void changeEmail(User user){
+    if(SecurityService.checkAccess(user)){
        //Grant option to change
     }
   }
 }
 
-public class SecurityService
-{
-  public static boolean checkAccess(User user)
-  {
+public class SecurityService{
+  public static boolean checkAccess(User user){
     //check the access.
   }
 }
@@ -74,18 +65,14 @@ Another example would be:
 Suppose there is a requirement to download the file – may be in csv/json/xml format, parse the file and then update
 the contents into a database or file system. One approach would be to:
 
-public class Task
-{
-  public void downloadFile(location)
-  {
+public class Task{
+  public void downloadFile(location){
     //Download the file
   }
-  public void parseTheFile(file)
-  {
+  public void parseTheFile(file){
     //Parse the contents of the file- XML/JSON/CSV
   }
-  public void persistTheData(data)
-  {
+  public void persistTheData(data){
     //Persist the data to Database or file system.
   }
 }
